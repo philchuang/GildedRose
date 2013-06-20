@@ -3,10 +3,10 @@ DEV RULES
 *Cannot alter Item class or Items property (other than making things static)
 
 BUSINESS LOGIC
-Each good has a Quality value, which never goes negative, never goes above 50
-Each good has a SellIn (days) number
-Normal item quality decay rate -1
-The rate of decrease doubles after SellIn days
+*Quality never goes negative TESTED (normal)
+*Quality never goes above 50 for normal items
+*Normal item quality decay rate is -1 TESTED (normal)
+*The rate of decrease doubles after SellIn days TESTED (normal)
 
 EXCEPTIONS
 "Aged Brie" quality decay rate +1
