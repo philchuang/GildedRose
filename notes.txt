@@ -1,6 +1,6 @@
 DEV RULES
 *Can alter UpdateQuality method
-*Cannot alter Item class or Items property
+*Cannot alter Item class or Items property (other than making things static)
 
 BUSINESS LOGIC
 Each good has a Quality value, which never goes negative, never goes above 50
