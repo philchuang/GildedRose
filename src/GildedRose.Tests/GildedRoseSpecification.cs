@@ -28,6 +28,13 @@ namespace GildedRose.Tests
 		{
 			Assert.IsNull (m_Because_of_Exception);
 		}
+
+		[Test]
+		public void then_app_should_have_items ()
+		{
+			Assert.IsNotNull (m_App.Items);
+			Assert.IsTrue (m_App.Items.Any ());
+		}
 	}
 
 	public abstract class when_UpdateQuality_is_called : GildedRoseSpecification
