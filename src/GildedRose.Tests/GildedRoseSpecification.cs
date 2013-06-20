@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using GildedRose.Console;
 using NBehave.Spec.NUnit;
+using NUnit.Framework;
 
+// ReSharper disable InconsistentNaming
 namespace GildedRose.Tests
 {
 	public abstract class GildedRoseSpecification : SpecBase
@@ -16,6 +18,15 @@ namespace GildedRose.Tests
 		{
 			base.Establish_context ();
 			m_App = App.CreateDefaultInstance();
+		}
+	}
+
+	public class when_GildedRoseApp_is_instantiated : GildedRoseSpecification
+	{
+		[Test]
+		public void then_no_exceptions_should_be_thrown ()
+		{
+			Assert.IsNull (m_Because_of_Exception);
 		}
 	}
 
