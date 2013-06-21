@@ -9,8 +9,8 @@ BUSINESS LOGIC
 *The rate of decrease doubles after SellIn days TESTED (normal)
 
 EXCEPTIONS
-"Aged Brie" quality decay rate +1
-"Sulfuras" quality decay rate 0, is Legendary, quality is always 80
+"Aged Brie" quality decay rate +1 TESTED
+"Sulfuras, Hand of Ragnaros" quality decay rate 0, is Legendary, quality is always 80/unchanged TESTED
 "Backstage passes" quality decay rate +1 with SellIn >10, +2 SellIn <=10, +3 SellIn <=5, quality goes to 0 when SellIn < 0 (or = 0?)
 Conjured items decay rate -2
 

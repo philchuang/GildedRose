@@ -57,6 +57,10 @@ namespace GildedRose.Tests
 			}
 		}
 
+	}
+
+	public abstract class when_UpdateQuality_is_called_on_non_legendary_items : when_UpdateQuality_is_called
+	{
 		[Test]
 		public void then_SellIn_should_decrease ()
 		{
@@ -64,7 +68,7 @@ namespace GildedRose.Tests
 		}
 	}
 
-	public abstract class when_UpdateQuality_is_called_with_normal_item : when_UpdateQuality_is_called
+	public abstract class when_UpdateQuality_is_called_with_normal_item : when_UpdateQuality_is_called_on_non_legendary_items
 	{
 		protected override void Establish_context ()
 		{
@@ -133,7 +137,7 @@ namespace GildedRose.Tests
 		}
 	}
 
-	public abstract class when_UpdateQuality_is_called_with_AgedBrie : when_UpdateQuality_is_called
+	public abstract class when_UpdateQuality_is_called_with_AgedBrie : when_UpdateQuality_is_called_on_non_legendary_items
 	{
 		protected override void Establish_context ()
 		{
@@ -222,6 +226,52 @@ namespace GildedRose.Tests
 		public void then_Quality_should_be_50 ()
 		{
 			Assert.AreEqual (50, m_Item.Quality);
+		}
+	}
+
+	public abstract class when_UpdateQuality_is_called_with_Sulfuras : when_UpdateQuality_is_called
+	{
+		protected override void Establish_context ()
+		{
+			base.Establish_context ();
+
+			m_Item = new Item
+			{
+				Name = "Sulfuras, Hand of Ragnaros",
+				Quality = m_InitialItemQuality,
+				SellIn = m_InitialItemSellIn,
+			};
+
+			m_App.Items.Clear ();
+			m_App.Items.Add (m_Item);
+		}
+
+		[Test]
+		public void then_Quality_should_not_change ()
+		{
+			Assert.AreEqual (m_InitialItemQuality, m_Item.Quality);
+		}
+	}
+
+	public class when_UpdateQuality_is_called_with_Sulfuras_with_positive_SellIn: when_UpdateQuality_is_called_with_Sulfuras
+	{
+		protected override void Establish_context ()
+		{
+			m_InitialItemQuality = 80;
+			m_InitialItemSellIn = 1;
+
+			base.Establish_context ();
+		}
+	}
+
+	public class when_UpdateQuality_is_called_with_Sulfuras_with_0_SellIn: when_UpdateQuality_is_called_with_Sulfuras
+	{
+		protected override void Establish_context ()
+		{
+			m_InitialItemQuality = 80;
+			m_InitialItemSellIn = 0;
+
+			base.Establish_context ();
 		}
 	}
 }
