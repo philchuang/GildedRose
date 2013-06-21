@@ -189,7 +189,7 @@ namespace GildedRose.Tests
 		}
 	}
 
-	public class when_UpdateQuality_is_called_with_AgedBrie_with_lessthan_48_quality_and_0_SellIn : when_UpdateQuality_is_called_with_AgedBrie
+	public class when_UpdateQuality_is_called_with_AgedBrie_with_lte_48_quality_and_0_SellIn : when_UpdateQuality_is_called_with_AgedBrie
 	{
 		protected override void Establish_context ()
 		{
@@ -209,7 +209,7 @@ namespace GildedRose.Tests
 		}
 	}
 
-	public class when_UpdateQuality_is_called_with_AgedBrie_with_than_49_quality_and_0_SellIn : when_UpdateQuality_is_called_with_AgedBrie
+	public class when_UpdateQuality_is_called_with_AgedBrie_with_49_quality_and_0_SellIn : when_UpdateQuality_is_called_with_AgedBrie
 	{
 		protected override void Establish_context ()
 		{
@@ -272,6 +272,110 @@ namespace GildedRose.Tests
 			m_InitialItemSellIn = 0;
 
 			base.Establish_context ();
+		}
+	}
+
+	public abstract class when_UpdateQuality_is_called_with_BackstagePasses : when_UpdateQuality_is_called_on_non_legendary_items
+	{
+		protected override void Establish_context ()
+		{
+			base.Establish_context ();
+
+			m_Item = new Item
+			{
+				Name = "Backstage passes to a TAFKAL80ETC concert",
+				Quality = m_InitialItemQuality,
+				SellIn = m_InitialItemSellIn,
+			};
+
+			m_App.Items.Clear ();
+			m_App.Items.Add (m_Item);
+		}
+	}
+
+	public class when_UpdateQuality_is_called_with_BackstagePasses_with_gt_10_SellIn : when_UpdateQuality_is_called_with_BackstagePasses
+	{
+		protected override void Establish_context ()
+		{
+			m_InitialItemQuality = 0;
+			m_InitialItemSellIn = 11;
+
+			base.Establish_context ();
+		}
+
+		[Test]
+		public void then_Quality_should_increase_by_1 ()
+		{
+			Assert.AreEqual (m_InitialItemQuality + 1, m_Item.Quality);
+		}
+	}
+
+	public class when_UpdateQuality_is_called_with_BackstagePasses_with_lte_10_SellIn : when_UpdateQuality_is_called_with_BackstagePasses
+	{
+		protected override void Establish_context ()
+		{
+			m_InitialItemQuality = 0;
+			m_InitialItemSellIn = 10;
+
+			base.Establish_context ();
+		}
+
+		[Test]
+		public void then_Quality_should_increase_by_2 ()
+		{
+			Assert.AreEqual (m_InitialItemQuality + 2, m_Item.Quality);
+		}
+	}
+
+	public class when_UpdateQuality_is_called_with_BackstagePasses_with_lte_5_SellIn : when_UpdateQuality_is_called_with_BackstagePasses
+	{
+		protected override void Establish_context ()
+		{
+			m_InitialItemQuality = 0;
+			m_InitialItemSellIn = 5;
+
+			base.Establish_context ();
+		}
+
+		[Test]
+		public void then_Quality_should_increase_by_3 ()
+		{
+			Assert.AreEqual (m_InitialItemQuality + 3, m_Item.Quality);
+		}
+	}
+
+	public class when_UpdateQuality_is_called_with_BackstagePasses_with_lte_0_SellIn : when_UpdateQuality_is_called_with_BackstagePasses
+	{
+		protected override void Establish_context ()
+		{
+			m_InitialItemQuality = 50;
+			m_InitialItemSellIn = 0;
+
+			base.Establish_context ();
+		}
+
+		[Test]
+		public void then_Quality_should_be_0 ()
+		{
+			Assert.AreEqual (0, m_Item.Quality);
+		}
+	}
+
+	public class when_UpdateQuality_is_called_with_BackstagePasses_with_0_Quality_and_40_SellIn_over_40_days : when_UpdateQuality_is_called_with_BackstagePasses
+	{
+		protected override void Establish_context ()
+		{
+			m_InitialItemQuality = 0;
+			m_InitialItemSellIn = 40;
+			m_NumTimesCalled = 40;
+
+			base.Establish_context ();
+		}
+
+		[Test]
+		public void then_Quality_should_be_50 ()
+		{
+			Assert.AreEqual (50, m_Item.Quality);
 		}
 	}
 }

@@ -4,14 +4,14 @@ DEV RULES
 
 BUSINESS LOGIC
 *Quality never goes negative TESTED (normal)
-*Quality never goes above 50 for normal items
+*Quality never goes above 50 for normal items TESTED (Aged Brie, Backstage passes)
 *Normal item quality decay rate is -1 TESTED (normal)
 *The rate of decrease doubles after SellIn days TESTED (normal)
 
 EXCEPTIONS
 "Aged Brie" quality decay rate +1 TESTED
 "Sulfuras, Hand of Ragnaros" quality decay rate 0, is Legendary, quality is always 80/unchanged TESTED
-"Backstage passes" quality decay rate +1 with SellIn >10, +2 SellIn <=10, +3 SellIn <=5, quality goes to 0 when SellIn < 0 (or = 0?)
+"Backstage passes to a TAFKAL80ETC concert" quality decay rate +1 with SellIn >10, +2 SellIn <=10, +3 SellIn <=5, quality goes to 0 when SellIn <= 0 (TESTED)
 Conjured items decay rate -2
 
 TODO
