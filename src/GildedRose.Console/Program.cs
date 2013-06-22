@@ -114,9 +114,11 @@ namespace GildedRose.Console
 
 	public class NormalItemQualityUpdater : IItemQualityUpdater
 	{
+		protected virtual int DecayFactor { get { return -1; } }
+
 		public void Update (Item item)
 		{
-			item.Quality += item.SellIn > 0 ? -1 : -2;
+			item.Quality += item.SellIn > 0 ? DecayFactor : DecayFactor*2;
 
 			item.SellIn--;
 
@@ -125,17 +127,9 @@ namespace GildedRose.Console
 		}
 	}
 
-	public class ConjuredItemQualityUpdater : IItemQualityUpdater
+	public class ConjuredItemQualityUpdater : NormalItemQualityUpdater
 	{
-		public void Update (Item item)
-		{
-			item.Quality += item.SellIn > 0 ? -2 : -4;
-
-			item.SellIn--;
-
-			if (item.Quality < 0)
-				item.Quality = 0;
-		}
+		protected override int DecayFactor { get { return -2; } }
 	}
 
 	public class LegendaryItemQualityUpdater : IItemQualityUpdater
