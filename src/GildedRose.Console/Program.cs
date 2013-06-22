@@ -48,18 +48,18 @@ namespace GildedRose.Console
 		public App ()
 		{
 			m_ItemTypeToUpdaterMap = new Dictionary<ItemType, IItemQualityUpdater> ();
-			//m_ItemTypeToUpdaterMap[ItemType.Unknown] = new NormalItemQualityUpdater ();
+			m_ItemTypeToUpdaterMap[ItemType.Unknown] = new NormalItemQualityUpdater ();
 			//m_ItemTypeToUpdaterMap[ItemType.Conjured] = new ConjuredItemQualityUpdater ();
 			m_ItemTypeToUpdaterMap[ItemType.Legendary] = new LegendaryItemQualityUpdater ();
 			m_ItemTypeToUpdaterMap[ItemType.Unique] = new UniqueItemsQualityUpdater (
-				//new AgedBrieItemQualityUpdater (),
+				new AgedBrieItemQualityUpdater (),
 				new BackstagePassesItemQualityUpdater ());
 		}
 
 		public ItemType GetItemType (Item item)
 		{
-			//if (item.Name == "Aged Brie")
-			//	return ItemType.Unique;
+			if (item.Name == "Aged Brie")
+				return ItemType.Unique;
 			if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
 				return ItemType.Unique;
 			if (item.Name == "Sulfuras, Hand of Ragnaros")
@@ -73,81 +73,7 @@ namespace GildedRose.Console
             for (var i = 0; i < Items.Count; i++)
             {
 	            var itemType = GetItemType (Items[i]);
-				if (itemType != ItemType.Unknown)
-				{
-					m_ItemTypeToUpdaterMap[itemType].Update (Items[i]);
-					continue;
-				}
-
-                if (Items[i].Name != "Aged Brie" && Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
-                {
-                    if (Items[i].Quality > 0)
-                    {
-                        if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
-                        {
-                            Items[i].Quality = Items[i].Quality - 1;
-                        }
-                    }
-                }
-                else
-                {
-                    if (Items[i].Quality < 50)
-                    {
-                        Items[i].Quality = Items[i].Quality + 1;
-
-                        if (Items[i].Name == "Backstage passes to a TAFKAL80ETC concert")
-                        {
-                            if (Items[i].SellIn < 11)
-                            {
-                                if (Items[i].Quality < 50)
-                                {
-                                    Items[i].Quality = Items[i].Quality + 1;
-                                }
-                            }
-
-                            if (Items[i].SellIn < 6)
-                            {
-                                if (Items[i].Quality < 50)
-                                {
-                                    Items[i].Quality = Items[i].Quality + 1;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
-                {
-                    Items[i].SellIn = Items[i].SellIn - 1;
-                }
-
-                if (Items[i].SellIn < 0)
-                {
-                    if (Items[i].Name != "Aged Brie")
-                    {
-                        if (Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
-                        {
-                            if (Items[i].Quality > 0)
-                            {
-                                if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
-                                {
-                                    Items[i].Quality = Items[i].Quality - 1;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Items[i].Quality = Items[i].Quality - Items[i].Quality;
-                        }
-                    }
-                    else
-                    {
-                        if (Items[i].Quality < 50)
-                        {
-                            Items[i].Quality = Items[i].Quality + 1;
-                        }
-                    }
-                }
+				m_ItemTypeToUpdaterMap[itemType].Update (Items[i]);
             }
         }
     }
@@ -220,7 +146,13 @@ namespace GildedRose.Console
 
 		public void Update (Item item)
 		{
-			// TODO implement
+			if (item.SellIn <= 0) item.Quality += 2;
+			else item.Quality += 1;
+
+			item.SellIn--;
+
+			if (item.Quality > 50) item.Quality = 50;
+			else if (item.Quality < 0) item.Quality = 0;
 		}
 	}
 

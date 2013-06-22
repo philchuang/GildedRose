@@ -452,16 +452,16 @@ namespace GildedRose.Tests
 		}
 	}
 
-	//public class when_GetItemType_is_called_with_AgedBrie : when_GetItemType_is_called
-	//{
-	//	protected override void Establish_context ()
-	//	{
-	//		m_ItemName = "Aged Brie";
-	//		m_ExpectedItemType = ItemType.Unique;
+	public class when_GetItemType_is_called_with_AgedBrie : when_GetItemType_is_called
+	{
+		protected override void Establish_context ()
+		{
+			m_ItemName = "Aged Brie";
+			m_ExpectedItemType = ItemType.Unique;
 
-	//		base.Establish_context ();
-	//	}
-	//}
+			base.Establish_context ();
+		}
+	}
 
 	public class when_GetItemType_is_called_with_BackstagePasses : when_GetItemType_is_called
 	{
