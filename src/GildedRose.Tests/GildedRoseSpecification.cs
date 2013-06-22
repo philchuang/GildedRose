@@ -13,16 +13,44 @@ namespace GildedRose.Tests
 	{
 		protected App m_App;
 		protected Exception m_Because_of_Exception;
+		protected bool? m_Because_of_Exception_Expected;
 
 		protected override void Establish_context ()
 		{
 			base.Establish_context ();
+			m_Because_of_Exception_Expected = false;
 			m_App = App.CreateDefaultInstance();
+		}
+
+		[Test]
+		public void then_unexpected_exception_should_not_be_thrown ()
+		{
+			if (m_Because_of_Exception_Expected == null) return;
+
+			if (m_Because_of_Exception_Expected.Value)
+				Assert.IsNotNull (m_Because_of_Exception);
+			else
+				Assert.IsNull (m_Because_of_Exception);
 		}
 	}
 
-	public class when_GildedRoseApp_is_instantiated : GildedRoseSpecification
+	public class when_GildedRoseApp_is_instantiated : SpecBase
 	{
+		protected App m_App;
+		protected Exception m_Because_of_Exception;
+
+		protected override void Because_of ()
+		{
+			try
+			{
+				m_App = App.CreateDefaultInstance ();
+			}
+			catch (Exception ex)
+			{
+				m_Because_of_Exception = ex;
+			}
+		}
+
 		[Test]
 		public void then_no_exceptions_should_be_thrown ()
 		{
@@ -229,7 +257,22 @@ namespace GildedRose.Tests
 		}
 	}
 
-	public abstract class when_UpdateQuality_is_called_with_Sulfuras : when_UpdateQuality_is_called
+	public abstract class when_UpdateQuality_is_called_on_legendary_item : when_UpdateQuality_is_called
+	{
+		[Test]
+		public void then_Quality_should_not_change ()
+		{
+			Assert.AreEqual (m_InitialItemQuality, m_Item.Quality);
+		}
+
+		[Test]
+		public void then_SellIn_should_not_change ()
+		{
+			Assert.AreEqual (m_InitialItemSellIn, m_Item.SellIn);
+		}
+	}
+
+	public abstract class when_UpdateQuality_is_called_with_Sulfuras : when_UpdateQuality_is_called_on_legendary_item
 	{
 		protected override void Establish_context ()
 		{
@@ -246,11 +289,6 @@ namespace GildedRose.Tests
 			m_App.Items.Add (m_Item);
 		}
 
-		[Test]
-		public void then_Quality_should_not_change ()
-		{
-			Assert.AreEqual (m_InitialItemQuality, m_Item.Quality);
-		}
 	}
 
 	public class when_UpdateQuality_is_called_with_Sulfuras_with_positive_SellIn: when_UpdateQuality_is_called_with_Sulfuras
@@ -376,6 +414,74 @@ namespace GildedRose.Tests
 		public void then_Quality_should_be_50 ()
 		{
 			Assert.AreEqual (50, m_Item.Quality);
+		}
+	}
+
+	public abstract class when_GetItemType_is_called : GildedRoseSpecification
+	{
+		protected String m_ItemName;
+		protected ItemType m_ExpectedItemType;
+
+		protected Item m_Item;
+		protected ItemType? m_ReturnedItemType;
+
+		protected override void Establish_context ()
+		{
+			base.Establish_context ();
+
+			m_Item = new Item {Name = m_ItemName};
+		}
+
+		protected override void Because_of ()
+		{
+			try
+			{
+				m_ReturnedItemType = m_App.GetItemType (m_Item);
+			}
+			catch (Exception ex)
+			{
+				m_Because_of_Exception = ex;
+			}
+		}
+
+		[Test]
+		public void then_expected_itemtype_should_be_returned ()
+		{
+			Assert.IsNotNull (m_ReturnedItemType);
+			Assert.AreEqual (m_ExpectedItemType, m_ReturnedItemType.Value);
+		}
+	}
+
+	//public class when_GetItemType_is_called_with_AgedBrie : when_GetItemType_is_called
+	//{
+	//	protected override void Establish_context ()
+	//	{
+	//		m_ItemName = "Aged Brie";
+	//		m_ExpectedItemType = ItemType.Unique;
+
+	//		base.Establish_context ();
+	//	}
+	//}
+
+	public class when_GetItemType_is_called_with_BackstagePasses : when_GetItemType_is_called
+	{
+		protected override void Establish_context ()
+		{
+			m_ItemName = "Backstage passes to a TAFKAL80ETC concert";
+			m_ExpectedItemType = ItemType.Unique;
+
+			base.Establish_context ();
+		}
+	}
+
+	public class when_GetItemType_is_called_with_Sulfuras : when_GetItemType_is_called
+	{
+		protected override void Establish_context ()
+		{
+			m_ItemName = "Sulfuras, Hand of Ragnaros";
+			m_ExpectedItemType = ItemType.Legendary;
+
+			base.Establish_context ();
 		}
 	}
 }
