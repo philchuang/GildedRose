@@ -49,7 +49,7 @@ namespace GildedRose.Console
 		{
 			m_ItemTypeToUpdaterMap = new Dictionary<ItemType, IItemQualityUpdater> ();
 			m_ItemTypeToUpdaterMap[ItemType.Unknown] = new NormalItemQualityUpdater ();
-			//m_ItemTypeToUpdaterMap[ItemType.Conjured] = new ConjuredItemQualityUpdater ();
+			m_ItemTypeToUpdaterMap[ItemType.Conjured] = new ConjuredItemQualityUpdater ();
 			m_ItemTypeToUpdaterMap[ItemType.Legendary] = new LegendaryItemQualityUpdater ();
 			m_ItemTypeToUpdaterMap[ItemType.Unique] = new UniqueItemsQualityUpdater (
 				new AgedBrieItemQualityUpdater (),
@@ -64,6 +64,8 @@ namespace GildedRose.Console
 				return ItemType.Unique;
 			if (item.Name == "Sulfuras, Hand of Ragnaros")
 				return ItemType.Legendary;
+			if (item.Name == "Conjured Mana Cake")
+				return ItemType.Conjured;
 
 			return ItemType.Unknown;
 		}
@@ -128,7 +130,12 @@ namespace GildedRose.Console
 	{
 		public void Update (Item item)
 		{
-			// TODO implement
+			item.Quality += item.SellIn > 0 ? -2 : -4;
+
+			item.SellIn--;
+
+			if (item.Quality < 0)
+				item.Quality = 0;
 		}
 	}
 

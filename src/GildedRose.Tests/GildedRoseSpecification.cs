@@ -417,6 +417,77 @@ namespace GildedRose.Tests
 		}
 	}
 
+	public abstract class when_UpdateQuality_is_called_with_conjured_item : when_UpdateQuality_is_called_on_non_legendary_items
+	{
+		protected override void Establish_context ()
+		{
+			base.Establish_context ();
+
+			m_Item = new Item
+			{
+				Name = "Conjured Mana Cake",
+				Quality = m_InitialItemQuality,
+				SellIn = m_InitialItemSellIn,
+			};
+
+			m_App.Items.Clear ();
+			m_App.Items.Add (m_Item);
+		}
+	}
+
+	public class when_UpdateQuality_is_called_with_conjured_item_with_positive_SellIn : when_UpdateQuality_is_called_with_conjured_item
+	{
+		protected override void Establish_context ()
+		{
+			m_InitialItemQuality = 10;
+			m_InitialItemSellIn = 10;
+
+			base.Establish_context ();
+		}
+
+		[Test]
+		public void then_Quality_should_decrease_by_2 ()
+		{
+			Assert.AreEqual (m_InitialItemQuality - 2, m_Item.Quality);
+		}
+	}
+
+	public class when_UpdateQuality_is_called_with_conjured_item_with_40_quality_and_10_SellIn_over_14_days : when_UpdateQuality_is_called_with_conjured_item
+	{
+		protected override void Establish_context ()
+		{
+			m_InitialItemQuality = 40;
+			m_InitialItemSellIn = 10;
+			m_NumTimesCalled = 14;
+
+			base.Establish_context ();
+		}
+
+		[Test]
+		public void then_Quality_should_be_4 ()
+		{
+			Assert.AreEqual (4, m_Item.Quality);
+		}
+	}
+
+	public class when_UpdateQuality_is_called_with_conjured_item_with_40_quality_and_10_SellIn_over_16_days : when_UpdateQuality_is_called_with_conjured_item
+	{
+		protected override void Establish_context ()
+		{
+			m_InitialItemQuality = 40;
+			m_InitialItemSellIn = 10;
+			m_NumTimesCalled = 16;
+
+			base.Establish_context ();
+		}
+
+		[Test]
+		public void then_Quality_should_be_0 ()
+		{
+			Assert.AreEqual (0, m_Item.Quality);
+		}
+	}
+
 	public abstract class when_GetItemType_is_called : GildedRoseSpecification
 	{
 		protected String m_ItemName;
@@ -480,6 +551,17 @@ namespace GildedRose.Tests
 		{
 			m_ItemName = "Sulfuras, Hand of Ragnaros";
 			m_ExpectedItemType = ItemType.Legendary;
+
+			base.Establish_context ();
+		}
+	}
+
+	public class when_GetItemType_is_called_with_ManaCake : when_GetItemType_is_called
+	{
+		protected override void Establish_context ()
+		{
+			m_ItemName = "Conjured Mana Cake";
+			m_ExpectedItemType = ItemType.Conjured;
 
 			base.Establish_context ();
 		}
