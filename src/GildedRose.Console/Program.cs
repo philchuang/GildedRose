@@ -22,31 +22,40 @@ namespace GildedRose.Console
 	{
 		public static App CreateDefaultInstance ()
 		{
-			return new App ()
-			{
-				Items = new List<Item>
-						               {
-							               new Item {Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20},
-							               new Item {Name = "Aged Brie", SellIn = 2, Quality = 0},
-							               new Item {Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7},
-							               new Item {Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80},
-							               new Item
-								               {
-									               Name = "Backstage passes to a TAFKAL80ETC concert",
-									               SellIn = 15,
-									               Quality = 20
-								               },
-							               new Item {Name = "Conjured Mana Cake", SellIn = 3, Quality = 6}
-						               }
-			};
+			var app = new App ()
+				          {
+					          Items = new List<Item>
+						                  {
+							                  new Item {Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20},
+							                  new Item {Name = "Aged Brie", SellIn = 2, Quality = 0},
+							                  new Item {Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7},
+							                  new Item {Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80},
+							                  new Item
+								                  {
+									                  Name = "Backstage passes to a TAFKAL80ETC concert",
+									                  SellIn = 15,
+									                  Quality = 20
+								                  },
+							                  new Item {Name = "Conjured Mana Cake", SellIn = 3, Quality = 6}
+						                  }
+				          };
+
+			app.AddItemTypeMapping ("Aged Brie", ItemType.Unique);
+			app.AddItemTypeMapping ("Backstage passes to a TAFKAL80ETC concert", ItemType.Unique);
+			app.AddItemTypeMapping ("Sulfuras, Hand of Ragnaros", ItemType.Legendary);
+			app.AddItemTypeMapping ("Conjured Mana Cake", ItemType.Conjured);
+
+			return app;
 		}
 
 		public IList<Item> Items;
 
+		private readonly Dictionary<String, ItemType> m_ItemNameToItemTypeMap;
 		private readonly Dictionary<ItemType, IItemQualityUpdater> m_ItemTypeToUpdaterMap;
 
 		public App ()
 		{
+			m_ItemNameToItemTypeMap = new Dictionary<string, ItemType> ();
 			m_ItemTypeToUpdaterMap = new Dictionary<ItemType, IItemQualityUpdater> ();
 			m_ItemTypeToUpdaterMap[ItemType.Unknown] = new NormalItemQualityUpdater ();
 			m_ItemTypeToUpdaterMap[ItemType.Conjured] = new ConjuredItemQualityUpdater ();
@@ -56,18 +65,17 @@ namespace GildedRose.Console
 				new BackstagePassesItemQualityUpdater ());
 		}
 
+		public void AddItemTypeMapping (String itemName, ItemType type)
+		{
+			m_ItemNameToItemTypeMap[itemName] = type;
+		}
+
 		public ItemType GetItemType (Item item)
 		{
-			if (item.Name == "Aged Brie")
-				return ItemType.Unique;
-			if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
-				return ItemType.Unique;
-			if (item.Name == "Sulfuras, Hand of Ragnaros")
-				return ItemType.Legendary;
-			if (item.Name == "Conjured Mana Cake")
-				return ItemType.Conjured;
+			if (item == null) throw new ArgumentNullException ("item");
 
-			return ItemType.Unknown;
+			ItemType type;
+			return m_ItemNameToItemTypeMap.TryGetValue (item.Name, out type) ? type : ItemType.Unknown;
 		}
 		
 		public void UpdateQuality ()
